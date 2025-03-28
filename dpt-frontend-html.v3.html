@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión de DPTs</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        .format-card {
+            transition: all 0.3s ease;
+        }
+        .format-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .ai-suggestion {
+            background-color: #f0f7ff;
+            border-left: 3px solid #3b82f6;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navegación -->
+    <nav class="bg-indigo-600 text-white shadow-lg">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <h1 class="text-2xl font-bold">DPT Manager</h1>
+                <div class="hidden md:flex space-x-4">
+                    <a href="#" class="hover:bg-indigo-700 px-3 py-2 rounded" id="nav-create">Crear DPT</a>
+                    <a href="#" class="hover:bg-indigo-700 px-3 py-2 rounded" id="nav-modify">Modificar DPT</a>
+                    <a href="#" class="hover:bg-indigo-700 px-3 py-2 rounded" id="nav-analyze">Analizar DPT</a>
+                    <a href="#" class="hover:bg-indigo-700 px-3 py-2 rounded" id="nav-monitor">Supervisar DPTs</a>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <input type="text" placeholder="Buscar DPT..." class="bg-indigo-500 text-white placeholder-indigo-200 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-white">
+                </div>
+                <div class="flex items-center">
+                    <img src="https://via.placeholder.com/40" alt="User" class="w-8 h-8 rounded-full">
+                    <span class="ml-2 hidden md:inline">Usuario</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <main class="container mx-auto px-4 py-6">
+        <!-- Sección: Selección de Acción -->
+        <div id="section-home" class="mb-10">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">Sistema de Gestión de Descripciones de Puesto de Trabajo</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Tarjeta: Crear DPT -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                    <div class="p-6">
+                        <div class="flex items-center justify-center w-12 h-12 bg-blue-100 text-blue-600 rounded-full mb-4">
+                            <i class="fas fa-plus-circle text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Crear DPT</h3>
+                        <p class="text-gray-600 mb-4">Crea una nueva Descripción de Puesto de Trabajo en cualquiera de los 10 formatos disponibles.</p>
+                        <button id="btn-create-dpt" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition duration-300">
+                            Comenzar
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Tarjeta: Modificar DPT -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                    <div class="p-6">
+                        <div class="flex items-center justify-center w-12 h-12 bg-green-100 text-green-600 rounded-full mb-4">
+                            <i class="fas fa-edit text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Modificar DPT</h3>
+                        <p class="text-gray-600 mb-4">Actualiza o modifica Descripciones de Puesto existentes con asistencia inteligente.</p>
+                        <button id="btn-modify-dpt" class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded transition duration-300">
+                            Seleccionar DPT
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Tarjeta: Analizar DPT -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                    <div class="p-6">
+                        <div class="flex items-center justify-center w-12 h-12 bg-purple-100 text-purple-600 rounded-full mb-4">
+                            <i class="fas fa-search text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Analizar DPT</h3>
+                        <p class="text-gray-600 mb-4">Identifica el formato y analiza la estructura y contenido de cualquier DPT.</p>
+                        <button id="btn-analyze-dpt" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded transition duration-300">
+                            Iniciar Análisis
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Tarjeta: Supervisar DPTs -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                    <div class="p-6">
+                        <div class="flex items-center justify-center w-12 h-12 bg-amber-100 text-amber-600 rounded-full mb-4">
+                            <i class="fas fa-chart-line text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Supervisar DPTs</h3>
+                        <p class="text-gray-600 mb-4">Visualiza métricas, estadísticas y genera informes de todos los DPTs en el sistema.</p>
+                        <button id="btn-monitor-dpt" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-medium py-2 px-4 rounded transition duration-300">
+                            Ver Dashboard
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección: Crear DPT (inicialmente oculta) -->
+        <div id="section-create" class="hidden">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Crear Nueva Descripción de Puesto de Trabajo</h2>
+                <button id="btn-back-home" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded transition duration-300">
+                    <i class="fas fa-arrow-left mr-2"></i> Volver
+                </button>
+            </div>
+            
+            <!-- Selección de Formato -->
+            <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">Selecciona un Formato</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                    <!-- Formato 1 -->
+                    <div class="format-card cursor-pointer bg-gray-50 border-2 border-transparent hover:border-blue-500 rounded-lg p-4 text-center" data-format="1">
+                        <div class="h-20 flex items-center justify-center mb-2">
+                            <i class="fas fa-file-alt text-4xl text-blue-500"></i>
+                        </div>
+                        <h4 class="font-medium">Formato 1</h4>
+                        <p class="text-xs text-gray-500">Estándar Básico</p>
+                    </div>
+                    
+                    <!-- Formato 2 -->
+                    <div class="format-card cursor-pointer bg-gray-50 border-2 border-transparent hover:border-blue-500 rounded-lg p-4 text-center" data-format="2">
+                        <div class="h-20 flex items-center justify-center mb-2">
+                            <i class="fas fa-file-alt text-4xl text-green-500"></i>
+                        </div>
+                        <h4 class="font-medium">Formato 2</h4>
+                        <p class="text-xs text-gray-500">Detallado por Competencias</p>
+                    </div>
+                    
+                    <!-- Formato 3 -->
+                    <div class="format-card cursor-pointer bg-gray-50 border-2 border-transparent hover:border-blue-500 rounded-lg p-4 text-center" data-format="3">
+                        <div class="h-20 flex items-center justify-center mb-2">
+                            <i class="fas fa-file-alt text-4xl text-purple-500"></i>
+                        </div>
+                        <h4 class="font-medium">Formato 3</h4>
+                        <p class="text-xs text-gray-500">Por Objetivos</p>
+                    </div>
+                    
+                    <!-- Formato 4 -->
+                    <div class="format-card cursor-pointer bg-gray-50 border-2 border-transparent hover:border-blue-500 rounded-lg p-4 text-center" data-format="4">
+                        <div class="h-20 flex items-center justify-center mb-2">
+                            <i class="fas fa-file-alt text-4xl text-red-500"></i>
+                        </div>
+                        <h4 class="font-medium">Formato 4</h4>
+                        <p class="text-xs text-gray-500">Enfoque en Resultados</p>
+                    </div>
+                    
+                    <!-- Formato 5 -->
+                    <div class="format-card cursor-pointer bg-gray-50 border-2 border-transparent hover:border-blue-500 rounded-lg p-4 text-center" data-format="5">
+                        <div class="h-20 flex items-center justify-center mb-2">
+                            <i class="fas fa-file-alt text-4xl text-amber-500"></i>
+                        </div>
+                        <h4 class="font-medium">Formato 5</h4>
+                        <p class="text-xs text-gray-500">Detalle Técnico</p>
+                    </div>
+                    
+                    <!-- Formato 6 -->
+                    <div class="format-card cursor-pointer bg-gray-50 border-2 border-transparent hover:border-blue-500 rounded-lg p-4 text-center" data-format="6">
+                        <div class="h-20 flex items-center justify-center mb-2">
+                            <i class="fas fa-file-alt text-4xl text-indigo-500"></i>
+                        </div>
+                        <h4 class="font-medium">Formato 6</h4>
+                        <p class="text-xs text-gray-500">Ejecutivo</p>
+                    </div>
+                    
+                    <!-- Formato 7 -->
+                    <div class="format-card cursor-pointer bg-gray-50 border-2 border-transparent hover:border-blue-500 rounded-lg p-4 text-center" data-format="7">
+                        <div class="h-20 flex items-center justify-center mb-2">
+                            <i class="fas fa-file-alt text-4xl text-pink-500"></i>
+                        </div>
+                        <h4 class="font-medium">Formato 7</h4>
+                        <p class="text-xs text-gray-500">Funcional Avanzado</p>
+                    </div>
+                    
+                    <!-- Formato 8 -->
+                    <div class="format-card cursor-pointer bg-gray-50 border-2 border-transparent hover:border-blue-500 rounded-lg p-4 text-center" data-format="8">
+                        <div class="h-20 flex items-center justify-center mb-2">
+                            <i class="fas fa-file-alt text-4xl text-cyan-500"></i>
+                        </div>
+                        <h4 class="font-medium">Formato 8</h4>
+                        <p class="text-xs text-gray-500">Académico/Investigación</p>
+                    </div>
+                    
+                    <!-- Formato 9 -->
+                    <div class="format-card cursor-pointer bg-gray-50 border-2 border-transparent hover:border-blue-500 rounded-lg p-4 text-center" data-format="9">
+                        <div class="h-20 flex items-center justify-center mb-2">
+                            <i class="fas fa-file-alt text-4xl text-orange-500"></i>
+                        </div>
+                        <h4 class="font-medium">Formato 9</h4>
+                        <p class="text-xs text-gray-500">Sector Público</p>
+                    </div>
+                    
+                    <!-- Formato 10 -->
+                    <div class="format-card cursor-pointer bg-gray-50 border-2 border-transparent hover:border-blue-500 rounded-lg p-4 text-center" data-format="10">
+                        <div class="h-20 flex items-center justify-center mb-2">
+                            <i class="fas fa-file-alt text-4xl text-emerald-500"></i>
+                        </div>
+                        <h4 class="font-medium">Formato 10</h4>
+                        <p class="text-xs text-gray-500">Internacional/Multinacional</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Formulario DPT (ejemplo para Formato 1) -->
+            <div id="form-format-1" class="bg-white rounded-xl shadow-md p-6 mb-6 hidden">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-semibold text-gray-800">Formato 1: Estándar Básico</h3>
+                    <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded">Formato Seleccionado</span>
+                </div>
+                
+                <form id="dpt-form-1" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="job-title" class="block text-sm font-medium text-gray-700 mb-1">Título del Puesto*</label>
+                            <input type="text" id="job-title" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <div class="ai-suggestion p-2 text-sm mt-1 hidden">
+                                <i class="fas fa-lightbulb text-blue-500 mr-1"></i> 
+                                <span>Sugerencia: Usa un título descriptivo y alineado con la industria.</span>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="department" class="block text-sm font-medium text-gray-700 mb-1">Departamento*</label>
+                            <input type="text" id="department" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="job-summary" class="block text-sm font-medium text-gray-700 mb-1">Resumen del Puesto*</label>
+                        <textarea id="job-summary" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+                        <div class="flex justify-end mt-1">
+                            <button type="button" class="text-blue-600 hover:text-blue-800 text-sm flex items-center">
+                                <i class="fas fa-magic mr-1"></i> Asistente IA
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="responsibilities" class="block text-sm font-medium text-gray-700 mb-1">Responsabilidades Principales*</label>
+                        <textarea id="responsibilities" rows="5" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+                        <div class="ai-suggestion p-2 text-sm mt-1">
+                            <i class="fas fa-lightbulb text-blue-500 mr-1"></i> 
+                            <span>Sugerencia: Incluye entre 5-7 responsabilidades clave, usando verbos de acción.</span>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="qualifications" class="block text-sm font-medium text-gray-700 mb-1">Requisitos y Cualificaciones*</label>
+                        <textarea id="qualifications" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+                        <div class="flex justify-end mt-1">
+                            <button type="button" class="text-blue-600 hover:text-blue-800 text-sm flex items-center">
+                                <i class="fas fa-magic mr-1"></i> Asistente IA
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="reports-to" class="block text-sm font-medium text-gray-700 mb-1">Reporta a*</label>
+                            <input type="text" id="reports-to" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        
+                        <div>
+                            <label for="supervises" class="block text-sm font-medium text-gray-700 mb-1">Supervisa a</label>
+                            <input type="text" id="supervises" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="working-conditions" class="block text-sm font-medium text-gray-700 mb-1">Condiciones de Trabajo</label>
+                        <textarea id="working-conditions" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+                    </div>
+                    
+                    <div class="pt-4 border-t border-gray-200">
+                        <div class="flex justify-between">
+                            <button type="button" id="btn-preview-dpt" class="bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded transition duration-300">
+                                <i class="fas fa-eye mr-2"></i> Vista Previa
+                            </button>
+                            
+                            <div>
+                                <button type="button" id="btn-save-draft" class="bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded transition duration-300 mr-2">
+                                    Guardar Borrador
+                                </button>
+                                <button type="submit" id="btn-save-dpt" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition duration-300">
+                                    <i class="fas fa-save mr-2"></i> Guardar DPT
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Panel de Asistente de IA -->
+            <div id="ai-assistant-panel" class="bg-white rounded-xl shadow-md p-6 mb-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-semibold text-gray-800">Asistente de Redacción IA</h3>
+                    <div>
+                        <span class="bg-green-100 text-green-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">
+                            <i class="fas fa-robot mr-1"></i> Gemini 2.0 Flash
+                        </span>
+                        <button class="text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <div class="flex items-start mb-3">
+                        <div class="bg-blue-100 rounded-full p-2 mr-3">
+                            <i class="fas fa-robot text-blue-600"></i>
+                        </div>
+                        <div class="bg-gray-100 rounded-lg p-3 max-w-3xl">
+                            <p class="text-gray-800">¿En qué campo te gustaría que te ayude con la redacción del DPT?</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        <button class="bg-blue-50 hover:bg-blue-100 text-blue-700 text-sm py-1 px-3 rounded-full transition duration-300">
+                            Mejorar resumen del puesto
+                        </button>
+                        <button class="bg-blue-50 hover:bg-blue-100 text-blue-700 text-sm py-1 px-3 rounded-full transition duration-300">
+                            Redactar responsabilidades
+                        </button>
+                        <button class="bg-blue-50 hover:bg-blue-100 text-blue-700 text-sm py-1 px-3 rounded-full transition duration-300">
+                            Sugerir requisitos
+                        </button>
+                        <button class="bg-blue-50 hover:bg-blue-100 text-blue-700 text-sm py-1 px-3 rounded-full transition duration-300">
+                            Verificar coherencia
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="border-t border-gray-200 pt-4">
+                    <div class="flex items-center">
+                        <input type="text" placeholder="Escribe tu pregunta o solicitud..." class="flex-1 px-4 py-2 border border-gray-300 rounded-l-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none">
+                        <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-r-md transition duration-300">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sección: Modificar DPT (inicialmente oculta) -->
+        <div id="section-modify" class="hidden">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Modificar Descripción de Puesto de Trabajo</h2>
+                <button id="btn-back-home-modify" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded transition duration-300">
+                    <i class="fas fa-arrow-left mr-2"></i> Volver
+                </button>
+            </div>
+            
+            <!-- Selección de DPT a modificar -->
+            <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">Seleccionar DPT a Modificar</h3>
+                
+                <div class="mb-4">
+                    <div class="flex">
+                        <div class="flex-1 mr-2">
+                            <input type="text" placeholder="Buscar por título, departamento, ID..." class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition duration-300">
+                            <i class="fas fa-search mr-2"></i> Buscar
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Título</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Departamento</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Formato</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Última Modificación</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <!-- Ejemplo de fila -->
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">DPT-001</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Desarrollador Full Stack</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Tecnología</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Formato 1</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">10/03/2025</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    <button class="text-blue-600 hover:text-blue-900 mr-3">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="text-gray-600 hover:text-gray-900 mr-3">
+                                        <i class="fas fa-history"></i>
+                                    </button>
+                                    <button class="text-red-600 hover:text-red-900">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <!-- Ejemplo de fila -->
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">DPT-002</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Gerente de Marketing</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Marketing</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Formato 3</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">15/03/2025</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    <button class="text-blue-600 hover:text-blue-900 mr-3">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="text-gray-600 hover:text-gray-900 mr-3">
+                                        <i class="fas fa-history"></i>
+                                    </button>
+                                    <button class="text-red-600 hover:text-red-900">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sección: Analizar DPT (inicialmente oculta) -->
+        <div id="section-analyze" class="hidden">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Analizar Descripción de Puesto de Trabajo</h2>
+                <button id="btn-back-home-analyze" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded transition duration-300">
+                    <i class="fas fa-arrow-left mr-2"></i> Volver
+                </button>
+            </div>
+            
+            <!-- Subir DPT para análisis -->
+            <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">Subir DPT para Análisis</h3>
+                
+                <div class="mb-6">
+                    <div class="flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                        <div class="space-y-1 text-center">
+                            <i class="fas fa-file-upload text-gray-400 text-5xl mb-3"></i>
+                            <div class="flex text-sm text-gray-600">
+                                <label for="file-upload" class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
+                                    <span>Subir archivo</span>
+                                    <input id="file-upload" name="file-upload" type="file" class="sr-only">
+                                </label>
+                                <p class="pl-1">o arrastrar y soltar</p>
+                            </div>
+                            <p class="text-xs text-gray-500">
+                                Archivos soportados: DOC, DOCX, PDF, TXT, RTF
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="border-t border-gray-200 pt-4">
+                    <div class="flex items-start">
+                        <div class="mr-4">
+                            <label for="dpt-text" class="block text-sm font-medium text-gray-700 mb-1">O pegar texto del DPT:</label>
+                            <textarea id="dpt-text" rows="10" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Pega aquí el contenido de la descripción de puesto..."></textarea>
+                        </div>
+                        
+                        <div class="flex-shrink-0">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Opciones:</label>
+                            <div class="space-y-2">
+                                <div class="flex items-center">
+                                    <input id="identify-format" name="identify-format" type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                    <label for="identify-format" class="ml-2 block text-sm text-gray-900">Identificar formato</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input id="extract-components" name="extract-components" type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                    <label for="extract-components" class="ml-2 block text-sm text-gray-900">Extraer componentes</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input id="quality-check" name="quality-check" type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                    <label for="quality-check" class="ml-2 block text-sm text-gray-900">Comprobar calidad</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input id="suggest-improvements" name="suggest-improvements" type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                    <label for="suggest-improvements" class="ml-2 block text-sm text-gray-900">Sugerir mejoras</label>
+                                </div>
+                            </div>
+                            
+                            <button id="btn-analyze" class="mt-4 w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded transition duration-300">
+                                <i class="fas fa-search mr-2"></i> Analizar DPT
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Resultados del análisis (inicialmente oculto) -->
+            <div id="analysis-results" class="bg-white rounded-xl shadow-md p-6 mb-6 hidden">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">Resultados del Análisis</h3>
+                <!-- Contenido de resultados del análisis se llenará dinámicamente -->
+            </div>
+        </div>
+        
+        <!-- Sección: Supervisar DPTs (inicialmente oculta) -->
+        <div id="section-monitor" class="hidden">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Dashboard de Supervisión de DPTs</h2>
+                <button id="btn-back-home-monitor" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded transition duration-300">
+                    <i class="fas fa-arrow-left mr-2"></i> Volver
+                </button>
+            </div>
+            
+            <!-- Tarjetas de estadísticas -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Total DPTs</p>
+                            <p class="text-3xl font-bold text-gray-800">24</p>
+                        </div>
+                        <div class="h-12 w-12 bg-blue-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-file-alt text-blue-600 text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <span class="text-green-600 text-sm font-medium flex items-center">
+                            <i class="fas fa-arrow-up mr-1"></i> 12% <span class="text-gray-500 ml-1">desde el mes pasado</span>
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">DPTs Actualizados</p>
+                            <p class="text-3xl font-bold text-gray-800">18</p>
+                        </div>
+                        <div class="h-12 w-12 bg-green-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-sync-alt text-green-600 text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <span class="text-green-600 text-sm font-medium flex items-center">
+                            <i class="fas fa-arrow-up mr-1"></i> 8% <span class="text-gray-500 ml-1">desde el mes pasado</span>
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">DPTs Pendientes</p>
+                            <p class="text-3xl font-bold text-gray-800">3</p>
+                        </div>
+                        <div class="h-12 w-12 bg-yellow-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-exclamation-triangle text-yellow-600 text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <span class="text-red-600 text-sm font-medium flex items-center">
+                            <i class="fas fa-arrow-up mr-1"></i> 2 <span class="text-gray-500 ml-1">desde la semana pasada</span>
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Calidad Promedio</p>
+                            <p class="text-3xl font-bold text-gray-800">87%</p>
+                        </div>
+                        <div class="h-12 w-12 bg-purple-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-chart-line text-purple-600 text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <span class="text-green-600 text-sm font-medium flex items-center">
+                            <i class="fas fa-arrow-up mr-1"></i> 4% <span class="text-gray-500 ml-1">desde el mes pasado</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Gráficos y reportes -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Distribución por Formato</h3>
+                    <div class="h-64 flex items-center justify-center">
+                        <!-- Aquí iría un gráfico real -->
+                        <div class="text-center text-gray-500">
+                            <i class="fas fa-chart-pie text-6xl mb-4"></i>
+                            <p>Gráfico de distribución por formato</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Actividad Reciente</h3>
+                    <div class="h-64 flex items-center justify-center">
+                        <!-- Aquí iría un gráfico real -->
+                        <div class="text-center text-gray-500">
+                            <i class="fas fa-chart-line text-6xl mb-4"></i>
+                            <p>Gráfico de actividad reciente</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Acciones y Exportar -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold text-gray-800">Exportar Informes</h3>
+                    <div>
+                        <button class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition duration-300">
+                            <i class="fas fa-file-export mr-2"></i> Exportar Todos los DPTs
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 cursor-pointer">
+                        <div class="flex items-center justify-between mb-2">
+                            <h4 class="font-medium text-gray-800">Reporte Completo</h4>
+                            <i class="fas fa-file-pdf text-red-500"></i>
+                        </div>
+                        <p class="text-sm text-gray-600">Todos los DPTs con detalles completos y métricas.</p>
+                    </div>
+                    
+                    <div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 cursor-pointer">
+                        <div class="flex items-center justify-between mb-2">
+                            <h4 class="font-medium text-gray-800">Resumen Ejecutivo</h4>
+                            <i class="fas fa-file-word text-blue-500"></i>
+                        </div>
+                        <p class="text-sm text-gray-600">Versión resumida para directivos con indicadores clave.</p>
+                    </div>
+                    
+                    <div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 cursor-pointer">
+                        <div class="flex items-center justify-between mb-2">
+                            <h4 class="font-medium text-gray-800">Análisis de Brechas</h4>
+                            <i class="fas fa-file-excel text-green-500"></i>
+                        </div>
+                        <p class="text-sm text-gray-600">Identifica inconsistencias y áreas de mejora en los DPTs.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-6">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <p>&copy; 2025 DPT Manager - Sistema de Gestión de Descripciones de Puesto de Trabajo</p>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="#" class="hover:text-gray-300">Ayuda</a>
+                    <a href="#" class="hover:text-gray-300">Documentación</a>
+                    <a href="#" class="hover:text-gray-300">Contacto</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript del Frontend -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Referencias a secciones principales
+            const sectionHome = document.getElementById('section-home');
+            const sectionCreate = document.getElementById('section-create');
+            const sectionModify = document.getElementById('section-modify');
+            const sectionAnalyze = document.getElementById('section-analyze');
+            const sectionMonitor = document.getElementById('section-monitor');
+            
+            // Botones de navegación principal
+            document.getElementById('nav-create').addEventListener('click', function(e) {
+                e.preventDefault();
+                showSection(sectionCreate);
+            });
+            
+            document.getElementById('nav-modify').addEventListener('click', function(e) {
+                e.preventDefault();
+                showSection(sectionModify);
+            });
+            
+            document.getElementById('nav-analyze').addEventListener('click', function(e) {
+                e.preventDefault();
+                showSection(sectionAnalyze);
+            });
+            
+            document.getElementById('nav-monitor').addEventListener('click', function(e) {
+                e.preventDefault();
+                showSection(sectionMonitor);
+            });
+            
+            // Botones de página de inicio
+            document.getElementById('btn-create-dpt').addEventListener('click', function() {
+                showSection(sectionCreate);
+            });
+            
+            document.getElementById('btn-modify-dpt').addEventListener('click', function() {
+                showSection(sectionModify);
+            });
+            
+            document.getElementById('btn-analyze-dpt').addEventListener('click', function() {
+                showSection(sectionAnalyze);
+            });
+            
+            document.getElementById('btn-monitor-dpt').addEventListener('click', function() {
+                showSection(sectionMonitor);
+            });
+            
+            // Botones para volver a la página principal
+            document.getElementById('btn-back-home').addEventListener('click', function() {
+                showSection(sectionHome);
+            });
+            
+            document.getElementById('btn-back-home-modify').addEventListener('click', function() {
+                showSection(sectionHome);
+            });
+            
+            document.getElementById('btn-back-home-analyze').addEventListener('click', function() {
+                showSection(sectionHome);
+            });
+            
+            document.getElementById('btn-back-home-monitor').addEventListener('click', function() {
+                showSection(sectionHome);
+            });
+            
+            // Selección de formato
+            const formatCards = document.querySelectorAll('.format-card');
+            const formFormat1 = document.getElementById('form-format-1');
+            
+            formatCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    // Eliminar selección previa
+                    formatCards.forEach(c => c.classList.remove('border-blue-500', 'bg-blue-50'));
+                    
+                    // Añadir selección actual
+                    this.classList.add('border-blue-500', 'bg-blue-50');
+                    
+                    const formatId = this.getAttribute('data-format');
+                    
+                    // Mostrar formulario correspondiente (por ahora solo tenemos el formato 1)
+                    if (formatId === '1') {
+                        formFormat1.classList.remove('hidden');
+                    }
+                });
+            });
+            
+            // Asistente IA - mostrar/ocultar sugerencias
+            const aiButtons = document.querySelectorAll('button .fa-magic').forEach(btn => {
+                btn.parentElement.addEventListener('click', function() {
+                    const field = this.closest('div').previousElementSibling;
+                    const nextElement = field.nextElementSibling;
+                    
+                    if (nextElement && nextElement.classList.contains('ai-suggestion')) {
+                        nextElement.classList.toggle('hidden');
+                    }
+                });
+            });
+            
+            // Función auxiliar para mostrar secciones
+            function showSection(section) {
+                // Ocultar todas las secciones
+                [sectionHome, sectionCreate, sectionModify, sectionAnalyze, sectionMonitor].forEach(s => {
+                    s.classList.add('hidden');
+                });
+                
+                // Mostrar la sección deseada
+                section.classList.remove('hidden');
+            }
+            
+            // Simulación de análisis de DPT
+            const btnAnalyze = document.getElementById('btn-analyze');
+            const analysisResults = document.getElementById('analysis-results');
+            
+            if (btnAnalyze) {
+                btnAnalyze.addEventListener('click', function() {
+                    // Simular tiempo de procesamiento
+                    btnAnalyze.disabled = true;
+                    btnAnalyze.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Analizando...';
+                    
+                    setTimeout(function() {
+                        // Mostrar resultados
+                        analysisResults.classList.remove('hidden');
+                        analysisResults.innerHTML = `
+                            <h3 class="text-xl font-semibold text-gray-800 mb-4">Resultados del Análisis</h3>
+                            <div class="mb-4">
+                                <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4">
+                                    <div class="flex">
+                                        <div class="flex-shrink-0">
+                                            <i class="fas fa-check-circle text-green-500"></i>
+                                        </div>
+                                        <div class="ml-3">
+                                            <p class="text-sm font-medium">Análisis completado con éxito</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <h4 class="text-lg font-medium text-gray-800 mb-2">Formato Identificado</h4>
+                                    <div class="flex items-center bg-gray-50 p-3 rounded-lg border border-gray-200">
+                                        <div class="bg-blue-100 rounded-full p-2 mr-3">
+                                            <i class="fas fa-file-alt text-blue-600"></i>
+                                        </div>
+                                        <div>
+                                            <p class="font-medium">Formato 3: Por Objetivos</p>
+                                            <p class="text-sm text-gray-600">Coincidencia: 87%</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <h4 class="text-lg font-medium text-gray-800 mb-2">Componentes Extraídos</h4>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                            <p class="font-medium mb-1">Título del Puesto</p>
+                                            <p class="text-gray-700">Gerente de Desarrollo de Producto</p>
+                                        </div>
+                                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                            <p class="font-medium mb-1">Departamento</p>
+                                            <p class="text-gray-700">Investigación y Desarrollo</p>
+                                        </div>
+                                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                            <p class="font-medium mb-1">Reporta a</p>
+                                            <p class="text-gray-700">Director de Innovación</p>
+                                        </div>
+                                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                            <p class="font-medium mb-1">Nivel de Experiencia</p>
+                                            <p class="text-gray-700">Senior (5+ años)</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <h4 class="text-lg font-medium text-gray-800 mb-2">Evaluación de Calidad</h4>
+                                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                        <div class="mb-3">
+                                            <div class="flex justify-between items-center mb-1">
+                                                <span class="text-sm font-medium">Claridad</span>
+                                                <span class="text-sm font-medium text-green-600">85%</span>
+                                            </div>
+                                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                                <div class="bg-green-500 h-2 rounded-full" style="width: 85%"></div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <div class="flex justify-between items-center mb-1">
+                                                <span class="text-sm font-medium">Completitud</span>
+                                                <span class="text-sm font-medium text-yellow-600">72%</span>
+                                            </div>
+                                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                                <div class="bg-yellow-500 h-2 rounded-full" style="width: 72%"></div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <div class="flex justify-between items-center mb-1">
+                                                <span class="text-sm font-medium">Alineación Estratégica</span>
+                                                <span class="text-sm font-medium text-green-600">90%</span>
+                                            </div>
+                                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                                <div class="bg-green-500 h-2 rounded-full" style="width: 90%"></div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="flex justify-between items-center mb-1">
+                                                <span class="text-sm font-medium">Medible</span>
+                                                <span class="text-sm font-medium text-red-600">65%</span>
+                                            </div>
+                                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                                <div class="bg-red-500 h-2 rounded-full" style="width: 65%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <h4 class="text-lg font-medium text-gray-800 mb-2">Sugerencias de Mejora</h4>
+                                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                                        <ul class="space-y-2">
+                                            <li class="flex items-start">
+                                                <i class="fas fa-lightbulb text-blue-500 mt-1 mr-2"></i>
+                                                <span>Añadir métricas específicas para evaluar el desempeño en cada objetivo.</span>
+                                            </li>
+                                            <li class="flex items-start">
+                                                <i class="fas fa-lightbulb text-blue-500 mt-1 mr-2"></i>
+                                                <span>Incluir requisitos de formación más detallados.</span>
+                                            </li>
+                                            <li class="flex items-start">
+                                                <i class="fas fa-lightbulb text-blue-500 mt-1 mr-2"></i>
+                                                <span>Especificar las relaciones interdepartamentales clave para este puesto.</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-between mt-6">
+                                <button class="bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded transition duration-300">
+                                    <i class="fas fa-download mr-2"></i> Exportar Análisis
+                                </button>
+                                
+                                <div>
+                                    <button class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded transition duration-300 mr-2">
+                                        <i class="fas fa-sync-alt mr-2"></i> Convertir a Otro Formato
+                                    </button>
+                                    <button class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition duration-300">
+                                        <i class="fas fa-edit mr-2"></i> Editar con Sugerencias
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                        
+                        btnAnalyze.disabled = false;
+                        btnAnalyze.innerHTML = '<i class="fas fa-search mr-2"></i> Analizar DPT';
+                    }, 2000);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
