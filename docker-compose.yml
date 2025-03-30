@@ -1,0 +1,62 @@
+services:
+  # Servicio de la aplicación web
+  dpt-manager-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dpt-manager
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_DEBUG=0
+      - DATABASE_URL=postgresql://postgres:postgres@dpt-manager-db:5432/dpt_manager
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+      - GITHUB_REPO=${GITHUB_REPO}
+    volumes:
+      - ./data/uploads:/app/uploads
+      - ./data/reports:/app/reports
+    depends_on:
+      - dpt-manager-db
+    networks:
+      - dpt-network
+
+  # Servicio de base de datos PostgreSQL
+  dpt-manager-db:
+    image: postgres:14
+    container_name: dpt-manager-db
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=dpt_manager
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - dpt-network
+
+  # Servicio de administración de base de datos (opcional)
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: dpt-manager-pgadmin
+    restart: always
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@example.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - dpt-manager-db
+    networks:
+      - dpt-network
+
+volumes:
+  postgres-data:
+
+networks:
+  dpt-network:
+    driver: bridge
